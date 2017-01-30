@@ -14,7 +14,7 @@ maxepoch = 500;
 
 %uncomment the appropriate section to use a particular dataset
 
-%{
+
 %%%%%%%%
 % MNIST
 %%%%%%%%
@@ -59,7 +59,7 @@ weightcost = 1e-5;
 numchunks = 8;
 numchunks_test = 8;
 %%%%%%%%
-%}
+
 
 
 %%%%%%%%
@@ -105,7 +105,7 @@ numchunks_test = 8;
 %%%%%%%%
 % CURVES
 %%%%%%%%
-
+%{
 %dataset available at www.cs.toronto.edu/~jmartens/digs3pts_1.mat
 tmp = load('digs3pts_1.mat');
 indata = tmp.bdata';
@@ -131,7 +131,10 @@ weightcost = 1e-5;
 numchunks = 4
 numchunks_test = 4;
 %%%%%%%%
+%}
 
+
+%{
 %it's an auto-encoder so output is input
 %reduce dimension
 indata = indata(1:4,:);
@@ -140,7 +143,11 @@ layersizes = [2];
 layertypes = {'linear','logistic'};
 outdata = indata;
 outtest = intest;
+%}
 
+%it's an auto-encoder so output is input
+outdata = indata;
+outtest = intest;
 
 
 
@@ -171,14 +178,15 @@ decay = 0.95;
 
 %jacket = 0;
 %this enables Jacket mode for the GPU
-jacket = 0;
+jacket = 1;
+%gpuDevice(1);
 
 errtype = 'L2'; %report the L2-norm error (in addition to the quantity actually being optimized, i.e. the log-likelihood)
 
-runName = 'test_ng_cpu';
+runName = 'test_geo_gpu';
 
 % JCM: ng = natural gradient
-nnet_train_ng( runName, runDesc, paramsp, Win, bin, resumeFile, maxepoch, indata, outdata, numchunks, intest, outtest, numchunks_test, layersizes, layertypes, mattype, rms, errtype, hybridmode, weightcost, decay, jacket);
+%nnet_train_ng( runName, runDesc, paramsp, Win, bin, resumeFile, maxepoch, indata, outdata, numchunks, intest, outtest, numchunks_test, layersizes, layertypes, mattype, rms, errtype, hybridmode, weightcost, decay, jacket);
 
 % JCM: geo = geodesic acceleration
-%nnet_train_geo( runName, runDesc, paramsp, Win, bin, resumeFile, maxepoch, indata, outdata, numchunks, intest, outtest, numchunks_test, layersizes, layertypes, mattype, rms, errtype, hybridmode, weightcost, decay, jacket);
+nnet_train_geo( runName, runDesc, paramsp, Win, bin, resumeFile, maxepoch, indata, outdata, numchunks, intest, outtest, numchunks_test, layersizes, layertypes, mattype, rms, errtype, hybridmode, weightcost, decay, jacket);
